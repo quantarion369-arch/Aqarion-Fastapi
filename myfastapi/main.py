@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from myfastapi.routers import items, partition, asymptotic
+
+from myfastapi.routers import asymptotic, items, partition
 
 app = FastAPI(title="MyFastAPI", version="0.1.0")
 
