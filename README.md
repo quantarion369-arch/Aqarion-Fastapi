@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ AQARION-fastapi
+# ⚡ AQARION-Fastapi
 
 **A minimal, production-ready FastAPI scaffold. Part of the AQARION research stack.**
 
@@ -191,19 +191,3 @@ This project is licensed under the MIT License. See the LICENSE file for details
 <sub>Part of the <a href="https://github.com/quantarion369-arch/AQARION">AQARION</a> research stack.</sub>
 </div>
 ```
-
----
-
-What changed and why
-
-Improvement Reason
-Centered header + badges Immediate visual status: Python version, framework, license, tests, lint, types
-Tagline + concept blockquote Answers "what is this?" in under 10 seconds
-Quick Start with numbered steps Copy-paste ready; includes expected URL
-Endpoints table FastAPI-specific; reviewers see the API surface at a glance
-Features table More scannable than a bullet list
-Tech Stack table Explicit versions and layers
-ASCII file tree Standard for GitHub READMEs; shows structure without a separate file
-Related Repos section Directly links to your AQARION umbrella repo as requested
-Roadmap checkboxes Shows project maturity and next steps
-Contributing + License Standard open-source completeness
