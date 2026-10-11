@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from myfastapi.routers import items
+from myfastapi.routers import items, partition, asymptotic
 
 app = FastAPI(title="MyFastAPI", version="0.1.0")
 
@@ -15,3 +15,5 @@ async def health() -> dict[str, str]:
 
 
 app.include_router(items.router, prefix="/items", tags=["items"])
+app.include_router(partition.router, prefix="/partition", tags=["partition"])
+app.include_router(asymptotic.router, prefix="/asymptotic", tags=["asymptotic"])
