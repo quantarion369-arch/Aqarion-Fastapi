@@ -1,4 +1,4 @@
-# AQARION-fastapi
+# Aqarion-Fastapi
 
 A FastAPI project scaffold. Part of the AQARION research stack.
 
