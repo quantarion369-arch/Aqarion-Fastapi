@@ -1,2 +1,43 @@
-# Aqarion-fasapi
-AQARION FastAPI service scaffold. Part of the AQARION research stack, linking to the AQARION umbrella repo, Lean proofs, and audit artifacts. Provides a minimal FastAPI layout with pyproject, ruff, mypy, pytest+httpx, dev scripts, docs, and GitHub Actions CI. Ready as a template or as the HTTP layer for AQARION services.
+# AQARION-fastapi
+
+A FastAPI project scaffold. Part of the AQARION research stack.
+
+## Quickstart
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -e '.[dev]'
+uvicorn myfastapi.main:app --reload
+```
+
+## Endpoints
+
+- `GET /`        — hello message
+- `GET /health`  — health check
+- `GET /items/`  — list items
+- `POST /items/` — create item
+- `GET /items/{id}` — fetch item
+
+## Development
+
+```bash
+./scripts/format.sh
+./scripts/lint.sh
+./scripts/test.sh
+```
+
+## Layout
+
+```
+myfastapi/       package
+docs/            documentation
+docs_src/        runnable doc examples
+tests/           pytest suite
+scripts/         dev scripts
+.github/         CI workflows
+```
+
+## License
+
+MIT
