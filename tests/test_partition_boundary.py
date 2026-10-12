@@ -20,6 +20,7 @@ def test_partition_1000_in_fresh_process() -> None:
                 "print('BOUNDARY_PASS')"
             ),
         ],
+        check=False,
         cwd=root,
         capture_output=True,
         text=True,
