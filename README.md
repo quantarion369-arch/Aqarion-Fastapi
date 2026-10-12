@@ -2,79 +2,108 @@
 
 # ⚡ AQARION-Fastapi
 
-A minimal, production-ready FastAPI scaffold. Part of the AQARION research stack.
+A minimal FastAPI service scaffold for exact partition computation, numerical asymptotic comparison, and the AQARION research stack.
 
-[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/test--functions-8-blue?style=for-the-badge)](https://github.com/quantarion369-arch/Aqarion-Fastapi/actions)
-[![Ruff](https://img.shields.io/badge/lint-ruff-46aef7?style=for-the-badge&logo=ruff&logoColor=white)](https://github.com/astral-sh/ruff)
-[![Mypy](https://img.shields.io/badge/types-mypy-2a6db2?style=for-the-badge&logo=python&logoColor=white)](https://mypy-lang.org/)
+[![Tests](https://github.com/quantarion369-arch/Aqarion-Fastapi/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/quantarion369-arch/Aqarion-Fastapi/actions/workflows/test.yml)
+[![Lint and Types](https://github.com/quantarion369-arch/Aqarion-Fastapi/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/quantarion369-arch/Aqarion-Fastapi/actions/workflows/lint.yml)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-[Quick Start](#-quick-start) · [Endpoints](#-endpoints) · [Tech Stack](#%EF%B8%8F-tech-stack) · [Project Layout](#-project-layout) · [Related Repos](#-related-repositories)
+[Quick Start](#quick-start) · [Endpoints](#endpoints) · [Verification](#verification) · [Project Layout](#project-layout) · [Research Boundaries](#research-boundaries)
 
 </div>
 
 ---
 
-## 📖 Concept
+## Overview
 
-This repository is the service layer for the AQARION research stack. It provides a working FastAPI application that can expose mathematical results, audit artifacts, and evidence-backed content as HTTP APIs. It is intentionally minimal — no database, no authentication layer, no Docker — so it can serve as a clean template for new services or a foundation for the full AQARION API.
+AQARION-Fastapi is a service layer for selected computations in the AQARION research stack.
 
-The application now includes three functional areas:
+It provides:
 
-- **Core service:** root response, health check, and in-memory item endpoints.
-- **Exact integer partitions:** computes $p(n)$, the number of integer partitions of $n$, using Euler's pentagonal-number recurrence.
-- **Asymptotic comparison:** compares the exact partition value with the leading Hardy–Ramanujan approximation and reports the relative error for the requested input.
+- Core service endpoints: a root response, health check, and in-memory item operations.
+- Exact integer partitions: computation of the partition number (p(n)).
+- Asymptotic comparison: the leading Hardy–Ramanujan approximation and input-specific relative error.
+- Automated tests, Ruff linting, and mypy type checks.
 
-> **Status: Research/API scaffold.** Eight test functions are present across three test modules. Their presence does not establish that the current suite passes from a clean clone; run the commands below and check the GitHub Actions results for the commit you intend to use. Production readiness is not asserted by the scaffold alone.
+```text
+HTTP request
+     |
+     v
+FastAPI application
+     |
+     +-- Core service --------> Root / health / in-memory items
+     |
+     +-- Partition router ----> Exact integer partition computation
+     |
+     +-- Asymptotic router ----> Exact value + approximation + error
+```
 
-Mathematical computations exposed through this API are application outputs, not independent proofs, formal verification certificates, or publication approvals. Research claims and their supporting evidence should remain in their appropriate authoritative research records.
+This is a research/API scaffold, not a complete production deployment.
+It has no database, authentication layer, or Docker deployment configuration.
 
----
+Application outputs are not independent mathematical proofs, formal verification
+certificates, or publication approvals.
 
-## 🚀 Quick Start
+## Quick Start
 
-**Prerequisites:** Python 3.11+ and `pip`.
+Prerequisites: Python 3.11+ and pip. GitHub Actions currently checks the project on Python 3.12.
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/quantarion369-arch/Aqarion-Fastapi.git
+git clone [https://github.com/quantarion369-arch/Aqarion-Fastapi.git](https://github.com/quantarion369-arch/Aqarion-Fastapi.git)
 cd Aqarion-Fastapi
 
-# 2. Create and activate a virtual environment
 python3 -m venv .venv
-source .venv/bin/activate   # On Windows: .venv\Scripts\activate
+source .venv/bin/activate
 
-# 3. Install with development dependencies
 pip install -e '.[dev]'
 
-# 4. Run the development server
 uvicorn myfastapi.main:app --reload
 ```
 
-The API will be available at http://127.0.0.1:8000.
+On Windows, activate the environment with:
 
-Interactive docs (Swagger UI) are at http://127.0.0.1:8000/docs. The generated OpenAPI schema is at http://127.0.0.1:8000/openapi.json.
+```powershell
+.venvScriptsActivate.ps1
+```
 
----
+Development URLs:
 
-🔌 Endpoints
+| Resource | URL |
+|---|---|
+| API | http://127.0.0.1:8000 |
+| Interactive documentation | http://127.0.0.1:8000/docs |
+| OpenAPI schema | http://127.0.0.1:8000/openapi.json |
 
-Method Path Description
-GET / Hello message
-GET /health Health check
-GET /items/ List all in-memory items
-POST /items/ Create an item (body: {"id": 1, "name": "apple"})
-GET /items/{item_id} Fetch a single item by ID
-GET /partition/{n} Return the exact integer partition number $p(n)$
-GET /asymptotic/{n} Compare $p(n)$ with its leading Hardy–Ramanujan approximation
+The reload-enabled server is for development.
 
-Integer partition endpoint
+## Endpoints
 
-GET /partition/{n} returns a JSON object with the requested integer n and its exact partition number p_n.
+| Method | Path | Description |
+|---|---|---|
+| GET | `/` | Hello message |
+| GET | `/health` | Health check |
+| GET | `/items/` | List in-memory items |
+| POST | `/items/` | Create an item |
+| GET | `/items/{item_id}` | Fetch an item by ID |
+| GET | `/partition/{n}` | Return the exact partition number |
+| GET | `/asymptotic/{n}` | Compare the exact partition value with the leading approximation |
 
-The route accepts $0 \leq n \leq 1000$. Negative values and values above the supported limit are rejected with an HTTP 400 response.
+Example item request body:
+
+```json
+{
+  "id": 1,
+  "name": "apple"
+}
+```
+
+### Exact integer partitions
+
+`GET /partition/{n}` accepts integer inputs from `0` through `1000`, inclusive.
+
+Negative integers and integers above the supported limit receive HTTP 400 responses.
 
 Example:
 
@@ -82,7 +111,7 @@ Example:
 curl http://127.0.0.1:8000/partition/10
 ```
 
-Expected mathematical result:
+Response:
 
 ```json
 {
@@ -91,23 +120,44 @@ Expected mathematical result:
 }
 ```
 
-The computation uses Euler's pentagonal-number recurrence with memoization. The endpoint returns an exact integer result within its configured input range.
+Upper-boundary response:
 
-Hardy–Ramanujan asymptotic endpoint
+```bash
+curl http://127.0.0.1:8000/partition/1000
+```
 
-GET /asymptotic/{n} compares the exact partition value against the leading-order Hardy–Ramanujan approximation.
+```json
+{
+  "n": 1000,
+  "p_n": 24061467864032622473692149727991
+}
+```
 
-The route accepts $1 \leq n \leq 1000$. It returns these fields:
+The implementation uses an iterative, incrementally cached version of Euler's
+pentagonal-number recurrence. Cached values are stored as Python integers,
+and cache extension is protected by a lock.
 
-Field Meaning
-n Requested positive integer
-exact Exact partition value $p(n)$
-approximation Floating-point leading-order approximation
-relative_error Absolute difference between approximation and exact value, divided by the exact value
+The cache belongs to the running Python process. It is not persistent storage.
 
-The implemented leading term is
+Two distinct files serve different roles:
 
-p(n) \approx \frac{\exp\!\left(\pi\sqrt{2n/3}\right)}{4\sqrt{3}\,n}.
+| File | Role |
+|---|---|
+| `myfastapi/partition.py` | Computes exact partition values |
+| `myfastapi/routers/partition.py` | Defines the HTTP endpoint and its input boundary |
+
+### Hardy–Ramanujan comparison
+
+`GET /asymptotic/{n}` accepts integer inputs from `1` through `1000`, inclusive.
+
+The implemented leading approximation is:
+
+[
+p(n) approx
+\frac{exp!left(pisqrt{2n/3}
+ight)}
+     {4sqrt{3},n}.
+]
 
 Example:
 
@@ -115,187 +165,250 @@ Example:
 curl http://127.0.0.1:8000/asymptotic/100
 ```
 
-The response contains the exact partition value alongside the approximation and its relative error.
+Response fields:
 
-Interpretation boundary: This is an asymptotic approximation, not an exact formula for $p(n)$. The returned relative error describes the particular requested input. A small number of passing test cases does not establish a universal error bound, a convergence theorem, or monotonic error reduction for every $n$.
+| Field | Meaning |
+|---|---|
+| `n` | Requested positive integer |
+| `exact` | Exact partition value |
+| `approximation` | Floating-point leading-order approximation |
+| `relative_error` | Absolute approximation error divided by the exact value |
 
----
+The reported error describes the requested input. Passing selected test cases
+does not establish a universal error bound or monotonic error reduction for
+every input.
 
-✨ Features
+## Verification
 
-Feature Description
-FastAPI Modern, high-performance ASGI web framework
-Pydantic v2 Request/response data validation and model definitions
-Uvicorn ASGI server with development reload support
-In-memory item API Basic item creation, listing, and retrieval
-Exact partition computation Euler's pentagonal-number recurrence for $p(n)$, with memoization
-Asymptotic comparison Leading Hardy–Ramanujan approximation with input-specific relative error
-Pytest + HTTPX Async integration tests against the ASGI application
-Ruff Python linting and formatting
-Mypy Static type checking configuration
-GitHub Actions Separate workflow files for tests and lint/type checks
-Development scripts scripts/format.sh, scripts/lint.sh, and scripts/test.sh
+### Recorded verification checkpoint
 
----
+On October 12, 2026, both GitHub workflows completed successfully for revision:
 
-🛠️ Tech Stack
-
-Layer Technology
-Language Python 3.11+
-Framework FastAPI
-ASGI Server Uvicorn (standard extras)
-Data Models Pydantic v2 + pydantic-settings
-Testing Pytest, pytest-asyncio, HTTPX
-Linting / Formatting Ruff
-Type Checking Mypy
-CI GitHub Actions
-Partition computation Python integers, recurrence, memoization
-Asymptotic computation Python math module
-
----
-
-📁 Project Layout
-
-```
-Aqarion-Fastapi/
-├── .github/
-│   └── workflows/
-│       ├── lint.yml                  # Ruff + Mypy workflow
-│       └── test.yml                  # Pytest workflow
-├── docs/
-│   └── index.md                      # Project documentation
-├── docs_src/
-│   └── tutorial/
-│       └── first_steps.py            # Runnable tutorial example
-├── myfastapi/
-│   ├── __init__.py
-│   ├── main.py                       # FastAPI app + router registration
-│   ├── partition.py                  # Exact integer partition function p(n)
-│   ├── asymptotic.py                 # Hardy–Ramanujan approximation + error
-│   └── routers/
-│       ├── __init__.py
-│       ├── items.py                  # /items endpoints
-│       ├── partition.py              # /partition/{n} endpoint
-│       └── asymptotic.py             # /asymptotic/{n} endpoint
-├── scripts/
-│   ├── format.sh                     # Ruff formatting and autofix
-│   ├── lint.sh                       # Ruff lint + Mypy
-│   └── test.sh                       # pytest -q
-├── tests/
-│   ├── __init__.py
-│   ├── test_main.py                  # Core service and item tests
-│   ├── test_partition.py             # Partition endpoint tests
-│   └── test_asymptotic.py            # Asymptotic endpoint tests
-├── .gitignore
-├── .python-version                   # Python version selection
-├── LICENSE                           # MIT
-├── README.md                         # This file
-└── pyproject.toml                    # Project metadata + dependencies
+```text
+a7e76b804ccfa6f478cfd332083b64b7474e9893
 ```
 
-The layout above identifies the main application, router, test, and workflow files relevant to the documented API. It is not intended to enumerate every repository file.
+| Check | Recorded result | Evidence |
+|---|---|---|
+| GitHub tests | Success | [Test run 38203890104](https://github.com/quantarion369-arch/Aqarion-Fastapi/actions/runs/38203890104) |
+| GitHub Ruff and mypy workflow | Success | [Lint run 38203890122](https://github.com/quantarion369-arch/Aqarion-Fastapi/actions/runs/38203890122) |
+| Local Termux suite | 11 tests passed | Recorded local execution |
+| Local research-script syntax check | Passed | Recorded local execution |
+| Local whitespace check | Passed | Recorded local execution |
 
----
+This is a revision-specific checkpoint, not a guarantee about future changes.
+The badges at the top link to the workflow history for the main branch.
 
-🧪 Running Tests
+### Run checks locally
 
-Install the development dependencies using the Quick Start instructions, then activate the virtual environment.
+After installing development dependencies and activating the environment:
 
 ```bash
-# Activate the virtual environment first
-source .venv/bin/activate
-
-# Run the complete test suite
 pytest -q
+ruff check .
+mypy myfastapi --ignore-missing-imports
+git diff --check
 ```
 
-The repository currently contains eight test functions across these modules:
+The commands above include the test, lint, and type-check commands used by the
+current GitHub workflows, plus a local whitespace check.
 
-· tests/test_main.py
-· tests/test_partition.py
-· tests/test_asymptotic.py
-
-The exact number of passing tests and the final test result must come from running the suite. Do not treat the presence of test functions as evidence that the current checkout passes.
-
-To run lint and type checks:
+Check the research script's syntax separately:
 
 ```bash
-./scripts/lint.sh
+python -m py_compile research/pb-core-006/pb006_extrapolate.py
 ```
 
-To auto-format:
-
-```bash
-./scripts/format.sh
-```
-
-To run the test script directly:
+Available helper scripts:
 
 ```bash
 ./scripts/test.sh
+./scripts/lint.sh
+./scripts/format.sh
 ```
 
-CI verification: Check the test and lint workflow results for the exact commit being reviewed. Workflow files existing in the repository does not, by itself, prove that either workflow has passed.
+The formatting script changes files; review its output before committing.
 
----
+### Test coverage
 
-🔗 Related Repositories
+The recorded local suite passed 11 tests across these four modules:
 
-Repository Description
-AQARION Umbrella research repository for mathematics, Lean proofs, and audit artifacts
-Aqarion-Fastapi This repository. FastAPI service scaffold for the AQARION stack
+| Module | Purpose |
+|---|---|
+| `tests/test_main.py` | Core service and item operations |
+| `tests/test_partition.py` | Existing partition endpoint tests |
+| `tests/test_asymptotic.py` | Asymptotic response and selected error comparisons |
+| `tests/test_partition_boundary.py` | Fresh-process upper-boundary computation and API boundary behavior |
 
-The API repository is the service boundary for selected computations. Research derivations, proof obligations, formal verification, counterexamples, and audit conclusions should remain in their existing authoritative records and be referenced here only when a concrete API integration requires them.
+The boundary tests check:
 
----
+- Exact computation of `partition(1000)` in a fresh Python subprocess.
+- A successful response from `/partition/1000`.
+- Rejection of `/partition/1001` with HTTP 400 and the expected detail.
 
-🗺️ Roadmap
+The fresh-process check avoids relying on a cache warmed by earlier tests.
 
-☑ Project scaffold with FastAPI, Pydantic, and Uvicorn
-☑ Async tests with pytest + HTTPX
-☑ Ruff and Mypy configuration
-☑ GitHub Actions workflows for lint and tests
-☑ Exact integer partition computation endpoint
-☑ Hardy–Ramanujan leading-order comparison endpoint
-☐ Verify the current test and lint workflows on the intended commit
-☐ Add /version endpoint
-☐ Add OpenAPI tags and descriptions for all routes
-☐ Connect to AQARION audit artifacts as a data source, with explicit provenance
-☐ Dockerfile + docker-compose (optional)
+### Termux-specific mypy workaround
 
----
+In the tested Termux Python 3.13 environment, mypy 2.4.0's native parser failed
+to load its `ast_serialize` extension:
 
-🤝 Contributing
+```text
+ImportError: dlopen failed: cannot locate symbol "PyExc_TypeError"
+```
+
+The local type check passed using:
+
+```bash
+.venv/bin/python -m mypy --no-native-parser myfastapi
+```
+
+This selects the fallback parser; it does not suppress application type errors.
+
+The GitHub Python 3.12 lint workflow passed without this workaround.
+Do not add the flag to the hosted workflow solely because the local Termux
+environment required it.
+
+## Project Layout
+
+```text
+Aqarion-Fastapi/
+├── .github/
+│   └── workflows/
+│       ├── lint.yml
+│       └── test.yml
+├── docs/
+│   └── index.md
+├── docs_src/
+│   └── tutorial/
+│       └── first_steps.py
+├── myfastapi/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── partition.py
+│   ├── asymptotic.py
+│   └── routers/
+│       ├── __init__.py
+│       ├── items.py
+│       ├── partition.py
+│       └── asymptotic.py
+├── research/
+│   └── pb-core-006/
+│       └── pb006_extrapolate.py
+├── scripts/
+│   ├── format.sh
+│   ├── lint.sh
+│   └── test.sh
+├── tests/
+│   ├── __init__.py
+│   ├── test_main.py
+│   ├── test_partition.py
+│   ├── test_asymptotic.py
+│   └── test_partition_boundary.py
+├── .gitignore
+├── .python-version
+├── LICENSE
+├── README.md
+└── pyproject.toml
+```
+
+This is a navigational overview, not an exhaustive repository inventory.
+
+## Technology
+
+| Layer | Technology |
+|---|---|
+| Language | Python |
+| API framework | FastAPI |
+| ASGI server | Uvicorn |
+| Data models | Pydantic |
+| Testing | Pytest, pytest-asyncio, HTTPX |
+| Linting and formatting | Ruff |
+| Static type checking | Mypy |
+| Continuous integration | GitHub Actions |
+| Exact partition computation | Integer arithmetic and cached recurrence |
+| Asymptotic endpoint | Python `math` computations |
+| Research extrapolation script | mpmath |
+
+Dependency declarations and version requirements are maintained in
+[`pyproject.toml`](pyproject.toml).
+
+## Research Boundaries
+
+Keep these categories distinct:
+
+| Category | What it establishes |
+|---|---|
+| Exact computation | An exact result for the implemented calculation and specified input |
+| Numerical approximation | An approximate value produced by the implemented formula |
+| Empirical test | Observed behavior for the cases actually tested |
+| Formal proof | A theorem established under explicit assumptions through an appropriate proof record |
+
+The API's asymptotic comparison and the research extrapolation script do not,
+by themselves, certify an asymptotic theorem.
+
+Research derivations, proof obligations, counterexamples, formal verification,
+and audit conclusions belong in their authoritative research records.
+Passing CI does not promote a mathematical claim beyond its supporting evidence.
+
+## Related Repository
+
+[AQARION](https://github.com/quantarion369-arch/AQARION) is the umbrella research
+repository for the broader mathematics, proof, and audit work.
+
+This repository provides the API/service boundary for selected computations.
+
+## Roadmap
+
+Completed:
+
+- [x] FastAPI service scaffold.
+- [x] Async integration tests.
+- [x] Ruff and mypy checks.
+- [x] Separate GitHub test and lint workflows.
+- [x] Exact integer partition endpoint.
+- [x] Leading Hardy–Ramanujan comparison endpoint.
+- [x] Iterative partition computation and upper-boundary regression tests.
+- [x] Successful hosted test and lint checkpoint for revision `a7e76b8`.
+
+Potential future work—not implemented or promised by this list:
+
+- [ ] Add a `/version` endpoint.
+- [ ] Improve OpenAPI tags and route descriptions.
+- [ ] Integrate selected audit artifacts with explicit provenance.
+- [ ] Add optional container deployment configuration.
+
+## Contributing
 
 1. Fork the repository.
-2. Create a feature branch: git checkout -b feature/my-feature.
-3. Commit your changes: git commit -m 'Add my feature'.
-4. Push to the branch: git push origin feature/my-feature.
-5. Open a Pull Request.
-
-Before opening a PR, run the test suite:
+2. Create a feature branch.
+3. Make a focused change with appropriate tests.
+4. Run tests, lint, and type checks.
+5. Review the diff and open a pull request.
 
 ```bash
+git checkout -b feature/my-feature
+
 pytest -q
+ruff check .
+mypy myfastapi --ignore-missing-imports
+git diff --check
 ```
 
-Run lint and type checks:
+Include verification results and identify the revision tested.
 
-```bash
-./scripts/lint.sh
-```
+Keep mathematical claims precise: distinguish exact computation,
+approximation, empirical observation, and proof. Do not describe passing
+software checks as mathematical certification.
 
-Include the relevant test results when describing a change. Mathematical claims should distinguish exact computation, numerical approximation, empirical observation, and formally established proof.
+## License
+
+Licensed under the MIT License. See [`LICENSE`](LICENSE).
 
 ---
-
-📄 License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
 
 <div align="center">
 
 <sub>Part of the <a href="https://github.com/quantarion369-arch/AQARION">AQARION</a> research stack.</sub>
 
 </div>
-```
