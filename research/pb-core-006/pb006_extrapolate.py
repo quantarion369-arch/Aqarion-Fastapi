@@ -17,7 +17,8 @@ D = (x_star / 12
 E_log = (2 * x_star ** 9 - 75 * x_star ** 3 - 550) / (2160 * x_star ** 4)
 
 print(f"Symbolic D     = {mp.nstr(D, 20)}")
-print(f"Symbolic E_log = {mp.nstr(E_log, 20)}\n")
+print(f"Symbolic E_log = {mp.nstr(E_log, 20)}
+")
 
 ys = [(t, t * (tD - D)) for (_, t, tD) in data]
 for (_, t, tD), (_, y) in zip(data, ys):
@@ -33,7 +34,8 @@ b = mp.matrix([y1, y2, y3])
 sol = mp.lu_solve(M, b)
 E_fit, F_fit, G_fit = sol[0], sol[1], sol[2]
 
-print(f"\n3-point Richardson fit (n = 1e4, 1e5, 1e6):")
+print("
+3-point Richardson fit (n = 1e4, 1e5, 1e6):")
 print(f"  E_log (fit)   = {mp.nstr(E_fit, 16)}")
 print(f"  E_log (exact) = {mp.nstr(E_log, 16)}")
 print(f"  |gap|         = {mp.nstr(abs(E_fit - E_log), 6)}")
