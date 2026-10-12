@@ -1,38 +1,17 @@
-
 """Exact integer partition function p(n).
 
-Uses Euler's generalized pentagonal-number recurrence with an
-incrementally maintained cache. The iterative implementation avoids
-Python recursion-depth limits.
-
-This module computes exact integer values; it does not certify any
-asymptotic theorem.
+Uses an iterative, incrementally cached pentagonal recurrence.
+This computation does not certify an asymptotic theorem.
 """
 
 from threading import Lock
-
 
 _PARTITION_VALUES: list[int] = [1]
 _PARTITION_LOCK = Lock()
 
 
 def partition(n: int) -> int:
-    """Return p(n), the number of integer partitions of n.
-
-    By convention, p(0) = 1 and p(n) = 0 for n < 0.
-
-    Known values:
-        p(0) = 1
-        p(1) = 1
-        p(2) = 2
-        p(3) = 3
-        p(4) = 5
-        p(5) = 7
-        p(10) = 42
-        p(50) = 204226
-        p(100) = 190569292
-        p(1000) = 24061467864032622473692149727991
-    """
+    """Return p(n), with p(0) = 1 and p(n) = 0 for n < 0."""
     if n < 0:
         return 0
 
